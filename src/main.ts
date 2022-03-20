@@ -22,7 +22,7 @@ declare global {
 globalThis.pixelRatio = pixelRatio;
 
 const gameConfig = createGameConfig(800, 600, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
-const phaserGame = new Phaser.Game(gameConfig);
+new Phaser.Game(gameConfig);
 
 window.onload = () => {
   const loader = document.querySelector<HTMLDivElement>('#loader')!;
