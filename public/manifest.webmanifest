@@ -1,7 +1,7 @@
 {
   "name": "Oldemor i farta",
   "short_name": "Oldemor",
-  "theme_color": "#e3e320",
+  "theme_color": "#f3dd71",
   "background_color": "#d6ffd9",
   "display": "fullscreen",
   "scope": "./",

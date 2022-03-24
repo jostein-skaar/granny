@@ -2,5 +2,5 @@
 
 ## Colors
 
-Primary: #e3e320 (yellow)
+Primary: #f3dd71 (yellow)
 Background:#d6ffd9 (light green)

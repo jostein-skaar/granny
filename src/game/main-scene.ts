@@ -44,7 +44,7 @@ export class MainScene extends Phaser.Scene {
     this.countdownText = this.add
       .text(this.bredde / 2, this.hoyde / 2, '', {
         fontSize: `${fiksForPikselratio(200)}px`,
-        color: '#b3000c',
+        color: '#f3dd71',
         fontStyle: 'bold',
       })
       .setOrigin(0.5, 0.5);
