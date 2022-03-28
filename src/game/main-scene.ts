@@ -11,6 +11,8 @@ export class MainScene extends Phaser.Scene {
   isDead: boolean = false;
   countdownText!: Phaser.GameObjects.Text;
 
+  playerNumber!: number;
+
   constructor() {
     super('main-scene');
   }
@@ -18,6 +20,8 @@ export class MainScene extends Phaser.Scene {
   init(_data: any): void {
     this.bredde = this.game.scale.gameSize.width;
     this.hoyde = this.game.scale.gameSize.height;
+
+    console.log('playerNumber', this.playerNumber);
   }
 
   create(): void {
@@ -27,7 +31,7 @@ export class MainScene extends Phaser.Scene {
     });
 
     this.hero = this.physics.add.sprite(0, 0, 'hero');
-    this.hero.setPosition(this.bredde / 2, this.hoyde / 2);
+    this.hero.setPosition(this.bredde / 2, this.hoyde - this.hero.height / 2 - fiksForPikselratio(50));
 
     this.hero.anims.create({
       key: 'walk',
@@ -58,28 +62,45 @@ export class MainScene extends Phaser.Scene {
       yoyo: true,
       repeat: -1,
     });
-    let countdownCounter = 3;
-    this.countdownText.setText(countdownCounter.toString());
-    const countdownIntervalId = setInterval(() => {
-      countdownCounter--;
+
+    let countdownCounter = 0;
+    if (countdownCounter > 0) {
+      this.isPaused = true;
+      this.physics.pause();
+
       this.countdownText.setText(countdownCounter.toString());
-      console.log(countdownCounter);
-      if (countdownCounter <= 0) {
-        this.countdownText.setVisible(false);
-        this.startGame();
-        clearInterval(countdownIntervalId);
-      }
-    }, 1000);
+      const countdownIntervalId = setInterval(() => {
+        countdownCounter--;
+        this.countdownText.setText(countdownCounter.toString());
+        console.log(countdownCounter);
+        if (countdownCounter <= 0) {
+          this.countdownText.setVisible(false);
+          this.startGame();
+          clearInterval(countdownIntervalId);
+        }
+      }, 1000);
+    } else {
+      this.countdownText.setVisible(false);
+      this.startGame();
+    }
 
     this.isDead = false;
-    this.isPaused = true;
-    this.physics.pause();
+
+    this.input.gamepad.once('connected', (pad: any) => {
+      console.log('connected', pad);
+    });
   }
 
   update(): void {
     // Animasjoner.
     if (!this.isPaused) {
       this.hero.play('walk', true);
+    }
+
+    if (this.input.gamepad.total > 0) {
+      const valuePlayer1 = this.getXValue();
+      this.hero.setX(valuePlayer1);
+      // console.log(this.mapAxisValue(this.input.gamepad.pad1.axes[1].value));
     }
   }
 
@@ -99,5 +120,11 @@ export class MainScene extends Phaser.Scene {
     this.cameras.main.setAlpha(0.5);
 
     this.scene.launch('lost-scene', {});
+  }
+
+  private getXValue(): number {
+    const axisIndex = this.playerNumber === 1 ? 0 : 1;
+    const value = this.input.gamepad.pad1.axes[axisIndex].value;
+    return Math.round(((value + 1) / 2) * (400 - this.hero.width)) + this.hero.width / 2;
   }
 }

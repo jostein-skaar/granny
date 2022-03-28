@@ -51,6 +51,10 @@ export function createGameConfig(
       zoom: 1 / pixelRatio,
       // autoRound: true,
     },
+
+    input: {
+      gamepad: true,
+    },
   };
 
   return gameConfig;
