@@ -15,7 +15,7 @@ let pixelRatio = window.devicePixelRatio;
 if (pixelRatio !== 1 && pixelRatio !== 2 && pixelRatio !== 3) {
   pixelRatio = 1;
 }
-pixelRatio = 1;
+// pixelRatio = 1;
 
 declare global {
   var pixelRatio: number;
