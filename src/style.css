@@ -30,10 +30,22 @@ p {
   border-style: solid;
 }
 
-#game canvas:first-child {
+#game canvas:first-of-type {
   border-color: rgb(67, 164, 255);
-  /* margin-right: 10px; */
+  margin-right: 100px;
 }
-#game canvas:last-child {
+#game canvas:last-of-type {
   border-color: rgb(23, 207, 100);
+}
+
+.player-info {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  margin-top: 10px;
+}
+
+.player-number {
+  font-size: 1.8rem;
+  width: 430px;
 }

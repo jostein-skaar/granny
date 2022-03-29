@@ -16,6 +16,7 @@ export class MainScene extends Phaser.Scene {
   currentSpeed = 0;
   playerNumber!: number;
   timeText!: Phaser.GameObjects.Text;
+  finishLineText!: Phaser.GameObjects.Text;
 
   constructor() {
     super('main-scene');
@@ -25,10 +26,17 @@ export class MainScene extends Phaser.Scene {
     this.bredde = this.game.scale.gameSize.width;
     this.hoyde = this.game.scale.gameSize.height;
 
-    console.log('playerNumber', this.playerNumber);
+    console.log('main-scene: init');
   }
 
   create(): void {
+    console.log('main-scene: create');
+
+    this.events.on('resume', () => {
+      console.log('main-scene: resume');
+      this.prepareNewGame();
+    });
+
     this.map = this.make.tilemap({ key: 'map' });
     const tiles = this.map.addTilesetImage(`tiles-sprite@${fiksForPikselratio(1)}`, 'tiles');
     this.map.createLayer('level', [tiles]);
@@ -38,8 +46,13 @@ export class MainScene extends Phaser.Scene {
       immovable: true,
     });
 
+    this.finishLineText = this.add.text(this.bredde / 2, fiksForPikselratio(10), 'Mål', {
+      fontSize: `${fiksForPikselratio(150)}px`,
+      color: '#333',
+    });
+    this.finishLineText.setOrigin(0.5, 0);
+
     this.hero = this.physics.add.sprite(0, 0, 'hero');
-    this.hero.setPosition(this.bredde / 2, this.map.heightInPixels - this.hero.height / 2 - fiksForPikselratio(50));
 
     this.hero.anims.create({
       key: 'walk',
@@ -62,7 +75,8 @@ export class MainScene extends Phaser.Scene {
     this.timeText.setScrollFactor(0, 0);
 
     this.countdownText = this.add
-      .text(this.bredde / 2, this.hoyde / 2, '', {
+      .text(this.bredde / 2, this.map.heightInPixels - this.hoyde / 2, '', {
+        fontFamily: 'Helvetica ',
         fontSize: `${fiksForPikselratio(200)}px`,
         color: '#f3dd71',
         fontStyle: 'bold',
@@ -79,16 +93,52 @@ export class MainScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    let countdownCounter = 0;
-    if (countdownCounter > 0) {
-      this.isPaused = true;
-      this.physics.pause();
+    this.prepareNewGame();
 
+    this.cameras.main.startFollow(this.hero);
+    this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+    this.cameras.main.setFollowOffset(0, fiksForPikselratio(100));
+  }
+
+  update(time: number): void {
+    if (this.input.gamepad.total > 0) {
+      this.hero.setX(this.getXValue());
+      // console.log(this.mapAxisValue(this.input.gamepad.pad1.axes[1].value));
+    }
+
+    if (this.isPaused) {
+      this.hero.setVelocityY(0);
+      return;
+    }
+    this.hero.play('walk', true);
+
+    this.currentTimeInMs = time - this.startTimeInMs;
+    this.currentSpeed = -100 + (-10 * this.currentTimeInMs) / 1000;
+    this.hero.setVelocityY(fiksForPikselratio(this.currentSpeed));
+
+    this.updateText();
+
+    if (this.hero.y < fiksForPikselratio(100)) {
+      this.finish();
+    }
+  }
+
+  private prepareNewGame() {
+    this.hero.setPosition(this.bredde / 2, this.map.heightInPixels - this.hero.height / 2 - fiksForPikselratio(50));
+    // this.hero.setPosition(this.bredde / 2, this.hero.height + fiksForPikselratio(250));
+
+    this.isFinished = false;
+    this.isPaused = true;
+    this.currentSpeed = 0;
+
+    let countdownCounter = 3;
+    if (countdownCounter > 0) {
+      this.countdownText.setVisible(true);
       this.countdownText.setText(countdownCounter.toString());
       const countdownIntervalId = setInterval(() => {
         countdownCounter--;
         this.countdownText.setText(countdownCounter.toString());
-        console.log(countdownCounter);
+        // console.log(countdownCounter);
         if (countdownCounter <= 0) {
           this.countdownText.setVisible(false);
           this.startGame();
@@ -99,41 +149,15 @@ export class MainScene extends Phaser.Scene {
       this.countdownText.setVisible(false);
       this.startGame();
     }
-
-    this.isFinished = false;
-
-    this.cameras.main.startFollow(this.hero);
-    this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-    this.cameras.main.setFollowOffset(0, fiksForPikselratio(100));
-  }
-
-  update(time: number): void {
-    this.currentTimeInMs = time - this.startTimeInMs;
-    this.currentSpeed = -100 + (-10 * this.currentTimeInMs) / 1000;
-    this.hero.setVelocityY(fiksForPikselratio(this.currentSpeed));
-
-    this.updateText();
-
-    // Animasjoner.
-    if (!this.isPaused) {
-      this.hero.play('walk', true);
-    }
-
-    if (this.input.gamepad.total > 0) {
-      this.hero.setX(this.getXValue());
-      // console.log(this.mapAxisValue(this.input.gamepad.pad1.axes[1].value));
-    }
-
-    if (this.hero.y < fiksForPikselratio(100)) {
-      this.finish();
-    }
   }
 
   private startGame() {
     this.isPaused = false;
-    this.physics.resume();
     this.currentSpeed = -100;
     this.startTimeInMs = this.time.now;
+    this.currentTimeInMs = 0;
+    this.updateText();
+    this.timeText.setVisible(true);
   }
 
   private finish() {
@@ -141,18 +165,15 @@ export class MainScene extends Phaser.Scene {
       return;
     }
     this.isFinished = true;
+    this.timeText.setVisible(false);
     this.scene.pause();
-    this.hero.setTint(0xff0000);
-    this.cameras.main.setBackgroundColor(0xbababa);
-    this.cameras.main.setAlpha(0.5);
-
-    this.scene.launch('lost-scene', { timeInMs: this.currentTimeInMs });
+    // this.scene.launch('lost-scene', { timeInMs: this.currentTimeInMs });
+    this.scene.bringToTop('lost-scene');
+    this.scene.resume('lost-scene', { timeInMs: this.currentTimeInMs });
   }
 
   private updateText() {
-    let text = 'Tid: ';
-    text += '' + this.currentTimeInMs / 1000;
-    this.timeText.setText(text);
+    this.timeText.setText('Tid: ' + (this.currentTimeInMs / 1000).toFixed(2));
   }
 
   private getXValue(): number {

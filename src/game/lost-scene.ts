@@ -4,24 +4,26 @@ export class LostScene extends Phaser.Scene {
   bredde!: number;
   hoyde!: number;
   timeInMs!: number;
+  scoreText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'lost-scene' });
   }
 
-  init(data: any) {
+  init() {
+    console.log('lost-scene: init');
     this.bredde = this.game.scale.gameSize.width;
     this.hoyde = this.game.scale.gameSize.height;
-    this.timeInMs = data.timeInMs;
   }
 
   create() {
-    const tekst = `Du klarte det på ${this.timeInMs / 1000} sekunder\n(Ta spaken fram og tilbake\nfor å prøve igjen)`;
-    this.add
-      .text(this.bredde / 2, this.hoyde / 2, tekst, {
+    console.log('lost-scene: create');
+
+    this.scoreText = this.add
+      .text(this.bredde / 2, this.hoyde / 2, '', {
         fontFamily: 'arial',
         fontSize: `${fiksForPikselratio(20)}px`,
-        color: '#fff',
+        color: '#333',
         align: 'center',
         backgroundColor: '#f3dd71',
         padding: { x: fiksForPikselratio(15), y: fiksForPikselratio(15) },
@@ -34,8 +36,23 @@ export class LostScene extends Phaser.Scene {
     //   });
     // }, 500);
 
-    setTimeout(() => {
-      this.scene.start('main-scene', {});
-    }, 4000);
+    this.events.on('resume', (_: any, data: any) => {
+      console.log('lost-scene: resume');
+
+      this.timeInMs = data.timeInMs;
+      this.updateText();
+
+      setTimeout(() => {
+        this.scene.pause();
+        this.scene.bringToTop('main-scene');
+        this.scene.resume('main-scene');
+      }, 2000);
+    });
+  }
+
+  private updateText() {
+    this.scoreText.setText(
+      `Du klarte det på ${(this.timeInMs / 1000).toFixed(2)} sekunder\n(Ta spaken fram og tilbake\nfor å prøve igjen)`
+    );
   }
 }

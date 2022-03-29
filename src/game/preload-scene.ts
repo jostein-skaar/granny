@@ -29,6 +29,9 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.scene.launch('lost-scene');
+    this.scene.pause('lost-scene');
     this.scene.start('main-scene');
+    this.scene.bringToTop('main-scene');
   }
 }
