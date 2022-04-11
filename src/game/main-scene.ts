@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import { fiksForPikselratio } from '../fiks-for-pikselratio';
 
 export class MainScene extends Phaser.Scene {
-  bredde!: number;
-  hoyde!: number;
+  gameWidth!: number;
+  gameHeight!: number;
   map!: Phaser.Tilemaps.Tilemap;
   hero!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   presentsGroup!: Phaser.Physics.Arcade.Group;
@@ -23,8 +23,8 @@ export class MainScene extends Phaser.Scene {
   }
 
   init(_data: any): void {
-    this.bredde = this.game.scale.gameSize.width;
-    this.hoyde = this.game.scale.gameSize.height;
+    this.gameWidth = this.game.scale.gameSize.width;
+    this.gameHeight = this.game.scale.gameSize.height;
 
     console.log('main-scene: init');
   }
@@ -46,13 +46,23 @@ export class MainScene extends Phaser.Scene {
       immovable: true,
     });
 
-    this.finishLineText = this.add.text(this.bredde / 2, fiksForPikselratio(10), 'Mål', {
+    this.finishLineText = this.add.text(this.gameWidth / 2, fiksForPikselratio(10), 'Mål', {
       fontSize: `${fiksForPikselratio(150)}px`,
       color: '#333',
     });
     this.finishLineText.setOrigin(0.5, 0);
 
     this.hero = this.physics.add.sprite(0, 0, 'hero');
+    this.hero.setInteractive({ draggable: true });
+    this.hero.on('drag', (_pointer: any, dragX: number) => {
+      let x = dragX;
+      if (x < this.hero.width / 2) {
+        x = this.hero.width / 2;
+      } else if (x > this.gameWidth - this.hero.width / 2) {
+        x = this.gameWidth - this.hero.width / 2;
+      }
+      this.hero.setX(x);
+    });
 
     this.hero.anims.create({
       key: 'walk',
@@ -75,7 +85,7 @@ export class MainScene extends Phaser.Scene {
     this.timeText.setScrollFactor(0, 0);
 
     this.countdownText = this.add
-      .text(this.bredde / 2, this.map.heightInPixels - this.hoyde / 2, '', {
+      .text(this.gameWidth / 2, this.map.heightInPixels - this.gameHeight / 2, '', {
         fontFamily: 'Helvetica ',
         fontSize: `${fiksForPikselratio(200)}px`,
         color: '#f3dd71',
@@ -103,7 +113,6 @@ export class MainScene extends Phaser.Scene {
   update(time: number): void {
     if (this.input.gamepad.total > 0) {
       this.hero.setX(this.getXValue());
-      // console.log(this.mapAxisValue(this.input.gamepad.pad1.axes[1].value));
     }
 
     if (this.isPaused) {
@@ -124,7 +133,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   private prepareNewGame() {
-    this.hero.setPosition(this.bredde / 2, this.map.heightInPixels - this.hero.height / 2 - fiksForPikselratio(50));
+    this.hero.setPosition(this.gameWidth / 2, this.map.heightInPixels - this.hero.height / 2 - fiksForPikselratio(50));
     // this.hero.setPosition(this.bredde / 2, this.hero.height + fiksForPikselratio(250));
 
     this.isFinished = false;
