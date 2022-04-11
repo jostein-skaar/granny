@@ -9,8 +9,8 @@
     "map": "tiled --export-map artwork/levels.tmx public/assets/levels@1.json && node tiled-map-helper.js"
   },
   "devDependencies": {
-    "typescript": "^4.5.4",
-    "vite": "^2.8.0"
+    "typescript": "^4.6.3",
+    "vite": "^2.9.1"
   },
   "dependencies": {
     "@jostein-skaar/common-game": "^1.1.1",
