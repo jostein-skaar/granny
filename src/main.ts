@@ -31,14 +31,14 @@ new Phaser.Game({
     },
   },
 });
-new Phaser.Game({
-  ...gameConfig,
-  callbacks: {
-    postBoot: (game) => {
-      (game.scene.getScene('main-scene') as MainScene).playerNumber = 2;
-    },
-  },
-});
+// new Phaser.Game({
+//   ...gameConfig,
+//   callbacks: {
+//     postBoot: (game) => {
+//       (game.scene.getScene('main-scene') as MainScene).playerNumber = 2;
+//     },
+//   },
+// });
 
 window.onload = () => {
   const loader = document.querySelector<HTMLDivElement>('#loader')!;

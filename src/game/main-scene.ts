@@ -41,9 +41,21 @@ export class MainScene extends Phaser.Scene {
     const tiles = this.map.addTilesetImage(`tiles-sprite@${fiksForPikselratio(1)}`, 'tiles');
     this.map.createLayer('level', [tiles]);
 
+    const enemyLayer = this.map.getObjectLayer('enemy');
+
     this.enemyGroup = this.physics.add.group({
       allowGravity: false,
       immovable: true,
+    });
+
+    const enemyFirstGid = this.map.tilesets.find((x) => x.name.startsWith('enemy-sprite'))?.firstgid!;
+    enemyLayer.objects.forEach((o: any) => {
+      // const index = Phaser.Math.Between(0, 5);
+      const index = o.gid - enemyFirstGid;
+      const enemy: Phaser.Physics.Arcade.Sprite = this.enemyGroup.create(0, 0, 'enemy', index);
+      enemy.setPosition(o.x + enemy.width / 2, o.y - enemy.height / 2);
+      enemy.setSize(enemy.width, fiksForPikselratio(20));
+      enemy.setOffset(0, enemy.height - fiksForPikselratio(20));
     });
 
     this.finishLineText = this.add.text(this.gameWidth / 2, fiksForPikselratio(10), 'Mål', {
@@ -72,8 +84,8 @@ export class MainScene extends Phaser.Scene {
 
     this.input.on('pointerdown', () => {});
 
-    this.physics.add.overlap(this.hero, this.enemyGroup, (_hero, _enemy) => {
-      this.finish();
+    this.physics.add.collider(this.hero, this.enemyGroup, (_hero, _enemy) => {
+      // console.log('hit', _enemy);
     });
 
     this.timeText = this.add.text(fiksForPikselratio(16), fiksForPikselratio(16), '', {
