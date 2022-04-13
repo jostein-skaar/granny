@@ -17,6 +17,7 @@ export class MainScene extends Phaser.Scene {
   playerNumber!: number;
   timeText!: Phaser.GameObjects.Text;
   finishLineText!: Phaser.GameObjects.Text;
+  enemyPositions: any[] = [];
 
   constructor() {
     super('main-scene');
@@ -45,17 +46,19 @@ export class MainScene extends Phaser.Scene {
 
     this.enemyGroup = this.physics.add.group({
       allowGravity: false,
-      immovable: true,
+      immovable: false,
     });
 
     const enemyFirstGid = this.map.tilesets.find((x) => x.name.startsWith('enemy-sprite'))?.firstgid!;
     enemyLayer.objects.forEach((o: any) => {
       // const index = Phaser.Math.Between(0, 5);
-      const index = o.gid - enemyFirstGid;
-      const enemy: Phaser.Physics.Arcade.Sprite = this.enemyGroup.create(0, 0, 'enemy', index);
+      const spriteIndex = o.gid - enemyFirstGid;
+      const enemy: Phaser.Physics.Arcade.Sprite = this.enemyGroup.create(0, 0, 'enemy', spriteIndex);
       enemy.setPosition(o.x + enemy.width / 2, o.y - enemy.height / 2);
       enemy.setSize(enemy.width, fiksForPikselratio(20));
       enemy.setOffset(0, enemy.height - fiksForPikselratio(20));
+      enemy.setMaxVelocity(0, 0);
+      this.enemyPositions.push({ x: enemy.x, y: enemy.y, enemy });
     });
 
     this.finishLineText = this.add.text(this.gameWidth / 2, fiksForPikselratio(10), 'Mål', {
@@ -124,7 +127,7 @@ export class MainScene extends Phaser.Scene {
 
   update(time: number): void {
     if (this.input.gamepad.total > 0) {
-      this.hero.setX(this.getXValue());
+      this.hero.setX(this.getXValueFromGamePad());
     }
 
     if (this.isPaused) {
@@ -147,6 +150,7 @@ export class MainScene extends Phaser.Scene {
   private prepareNewGame() {
     this.hero.setPosition(this.gameWidth / 2, this.map.heightInPixels - this.hero.height / 2 - fiksForPikselratio(50));
     // this.hero.setPosition(this.bredde / 2, this.hero.height + fiksForPikselratio(250));
+    this.resetEnemyPositions();
 
     this.isFinished = false;
     this.isPaused = true;
@@ -197,10 +201,16 @@ export class MainScene extends Phaser.Scene {
     this.timeText.setText('Tid: ' + (this.currentTimeInMs / 1000).toFixed(2));
   }
 
-  private getXValue(): number {
+  private getXValueFromGamePad(): number {
     const axisIndex = this.playerNumber === 1 ? 0 : 1;
     // Value is from -1 to 1. Need to add 1 and divide with 2 to normalize it between 0 and 1.
     const value = (this.input.gamepad.pad1.axes[axisIndex].value + 1) / 2;
     return Math.round(value * (400 - this.hero.width) + this.hero.width / 2);
+  }
+
+  private resetEnemyPositions() {
+    for (const positionInfo of this.enemyPositions) {
+      positionInfo.enemy.setPosition(positionInfo.x, positionInfo.y);
+    }
   }
 }
