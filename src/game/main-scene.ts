@@ -5,9 +5,7 @@ export class MainScene extends Phaser.Scene {
   gameWidth!: number;
   gameHeight!: number;
   map!: Phaser.Tilemaps.Tilemap;
-  hero!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  presentsGroup!: Phaser.Physics.Arcade.Group;
-  enemyGroup!: Phaser.Physics.Arcade.Group;
+  hero!: Phaser.Physics.Matter.Sprite;
   isPaused: boolean = false;
   isFinished: boolean = false;
   countdownText!: Phaser.GameObjects.Text;
@@ -44,22 +42,22 @@ export class MainScene extends Phaser.Scene {
 
     const enemyLayer = this.map.getObjectLayer('enemy');
 
-    this.enemyGroup = this.physics.add.group({
-      allowGravity: false,
-      immovable: false,
-    });
-
     const enemyTilset = this.map.tilesets.find((x) => x.name.startsWith('enemy-sprite'));
+    const enemyTilsetProperties: any = { ...enemyTilset?.tileProperties };
     const enemyFirstGid = enemyTilset?.firstgid!;
     enemyLayer.objects.forEach((object: any) => {
       const spriteIndex = object.gid - enemyFirstGid;
-      const enemy: Phaser.Physics.Arcade.Sprite = this.enemyGroup.create(0, 0, 'enemy', spriteIndex);
+
+      const objectWidth = object.width;
+      const objectHeight = object.height;
+      const objectRealHeight = fiksForPikselratio(enemyTilsetProperties[spriteIndex]?.height as number);
+
+      const enemy: Phaser.Physics.Matter.Sprite = this.matter.add.sprite(0, 0, 'enemy', spriteIndex, {
+        shape: { type: 'rectangle', width: objectWidth, height: objectRealHeight },
+        render: { sprite: { xOffset: 0, yOffset: (1 - objectRealHeight / objectHeight) / 2 } },
+        mass: 100,
+      });
       enemy.setPosition(object.x + enemy.width / 2, object.y - enemy.height / 2);
-      const properties: any = { ...enemyTilset?.tileProperties };
-      const objectHeight = properties[spriteIndex]?.height as number;
-      enemy.setSize(enemy.width, fiksForPikselratio(objectHeight));
-      enemy.setOffset(0, enemy.height - fiksForPikselratio(objectHeight));
-      enemy.setMaxVelocity(0, 0);
       this.enemyPositions.push({ x: enemy.x, y: enemy.y, enemy });
     });
 
@@ -69,28 +67,21 @@ export class MainScene extends Phaser.Scene {
     });
     this.finishLineText.setOrigin(0.5, 0);
 
-    this.hero = this.physics.add.sprite(0, 0, 'hero');
+    this.hero = this.matter.add.sprite(0, 0, 'hero');
+    this.hero.setBody({ type: 'rectangle', width: this.hero.width * 0.9, height: this.hero.height * 0.9 });
+    this.hero.setFixedRotation();
+    this.hero.setMass(1);
+    console.log('hero', this.hero.body.mass);
+
     this.hero.setInteractive({ draggable: true });
     this.hero.on('drag', (_pointer: any, dragX: number) => {
-      let x = dragX;
-      if (x < this.hero.width / 2) {
-        x = this.hero.width / 2;
-      } else if (x > this.gameWidth - this.hero.width / 2) {
-        x = this.gameWidth - this.hero.width / 2;
-      }
-      this.hero.setX(x);
+      this.hero.setX(dragX);
     });
 
     this.hero.anims.create({
       key: 'walk',
       frames: this.anims.generateFrameNumbers('hero', { frames: [0, 1] }),
       frameRate: 6,
-    });
-
-    this.input.on('pointerdown', () => {});
-
-    this.physics.add.collider(this.hero, this.enemyGroup, (_hero, _enemy) => {
-      // console.log('hit', _enemy);
     });
 
     this.timeText = this.add.text(fiksForPikselratio(16), fiksForPikselratio(16), '', {
@@ -112,7 +103,6 @@ export class MainScene extends Phaser.Scene {
 
     this.tweens.add({
       targets: this.countdownText,
-      // x: this.bredde,
       scale: 1.4,
       ease: 'Power0',
       duration: 250,
@@ -139,7 +129,8 @@ export class MainScene extends Phaser.Scene {
     this.hero.play('walk', true);
 
     this.currentTimeInMs = time - this.startTimeInMs;
-    this.currentSpeed = -100 + (-10 * this.currentTimeInMs) / 1000;
+    this.currentSpeed = -3; //+ (-10 * this.currentTimeInMs) / 1000;
+    // console.log(this.hero.body.velocity.y);
     this.hero.setVelocityY(fiksForPikselratio(this.currentSpeed));
 
     this.updateText();
@@ -147,18 +138,20 @@ export class MainScene extends Phaser.Scene {
     if (this.hero.y < fiksForPikselratio(100)) {
       this.finish();
     }
+
+    this.constrainHeroX();
   }
 
   private prepareNewGame() {
     this.hero.setPosition(this.gameWidth / 2, this.map.heightInPixels - this.hero.height / 2 - fiksForPikselratio(50));
-    // this.hero.setPosition(this.bredde / 2, this.hero.height + fiksForPikselratio(250));
+
     this.resetEnemyPositions();
 
     this.isFinished = false;
     this.isPaused = true;
     this.currentSpeed = 0;
 
-    let countdownCounter = 3;
+    let countdownCounter = 0;
     if (countdownCounter > 0) {
       this.countdownText.setVisible(true);
       this.countdownText.setText(countdownCounter.toString());
@@ -212,7 +205,20 @@ export class MainScene extends Phaser.Scene {
 
   private resetEnemyPositions() {
     for (const positionInfo of this.enemyPositions) {
-      positionInfo.enemy.setPosition(positionInfo.x, positionInfo.y);
+      const enemy: Phaser.Physics.Matter.Sprite = positionInfo.enemy;
+      enemy.setPosition(positionInfo.x, positionInfo.y);
+      enemy.setAngle(0);
+    }
+  }
+
+  private constrainHeroX() {
+    let x = this.hero.x;
+    if (x < this.hero.width / 2) {
+      x = this.hero.width / 2;
+      this.hero.setX(x);
+    } else if (x > this.gameWidth - this.hero.width / 2) {
+      x = this.gameWidth - this.hero.width / 2;
+      this.hero.setX(x);
     }
   }
 }

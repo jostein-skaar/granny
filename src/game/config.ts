@@ -29,8 +29,8 @@ export function createGameConfig(
     },
 
     physics: {
-      default: 'arcade',
-      arcade: {
+      default: 'matter',
+      matter: {
         gravity: { y: 0 * pixelRatio },
         debug: isDebug,
       },
