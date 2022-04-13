@@ -24,6 +24,17 @@ function changeToPixelRatio(map, pixelRatio) {
     tileset.image = tileset.image.replace('@1', `@${pixelRatio}`);
     tileset.name = tileset.name.replace('@1', `@${pixelRatio}`);
   }
+
+  for (const layer of map.layers) {
+    if (layer.type === 'objectgroup') {
+      for (const object of layer.objects) {
+        object.width *= pixelRatio;
+        object.height *= pixelRatio;
+        object.x *= pixelRatio;
+        object.y *= pixelRatio;
+      }
+    }
+  }
 }
 
 function calculateNewWidthForTileset(tileset, pixelRatio) {
