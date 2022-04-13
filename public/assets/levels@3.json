@@ -5008,6 +5008,7 @@
       ],
       "height": 200,
       "id": 1,
+      "locked": true,
       "name": "level",
       "opacity": 1,
       "type": "tilelayer",
@@ -5212,6 +5213,54 @@
           "width": 120,
           "x": 144,
           "y": 9990
+        },
+        {
+          "gid": 18,
+          "height": 240,
+          "id": 17,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 120,
+          "x": 624,
+          "y": 10098
+        },
+        {
+          "gid": 18,
+          "height": 240,
+          "id": 18,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 120,
+          "x": 192,
+          "y": 9774
+        },
+        {
+          "gid": 21,
+          "height": 240,
+          "id": 19,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 120,
+          "x": 960,
+          "y": 9504
+        },
+        {
+          "gid": 17,
+          "height": 240,
+          "id": 21,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 120,
+          "x": 288,
+          "y": 10314
         }
       ],
       "opacity": 1,
@@ -5222,7 +5271,7 @@
     }
   ],
   "nextlayerid": 3,
-  "nextobjectid": 17,
+  "nextobjectid": 22,
   "orientation": "orthogonal",
   "renderorder": "right-up",
   "tiledversion": "1.8.2",
@@ -5252,6 +5301,68 @@
       "spacing": 2,
       "tilecount": 6,
       "tileheight": 240,
+      "tiles": [
+        {
+          "id": 0,
+          "properties": [
+            {
+              "name": "height",
+              "type": "int",
+              "value": 80
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "properties": [
+            {
+              "name": "height",
+              "type": "int",
+              "value": 48
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "properties": [
+            {
+              "name": "height",
+              "type": "int",
+              "value": 18
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "properties": [
+            {
+              "name": "height",
+              "type": "int",
+              "value": 80
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "properties": [
+            {
+              "name": "height",
+              "type": "int",
+              "value": 48
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "properties": [
+            {
+              "name": "height",
+              "type": "int",
+              "value": 18
+            }
+          ]
+        }
+      ],
       "tilewidth": 120
     }
   ],

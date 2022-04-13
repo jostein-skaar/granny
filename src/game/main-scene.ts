@@ -49,14 +49,16 @@ export class MainScene extends Phaser.Scene {
       immovable: false,
     });
 
-    const enemyFirstGid = this.map.tilesets.find((x) => x.name.startsWith('enemy-sprite'))?.firstgid!;
-    enemyLayer.objects.forEach((o: any) => {
-      // const index = Phaser.Math.Between(0, 5);
-      const spriteIndex = o.gid - enemyFirstGid;
+    const enemyTilset = this.map.tilesets.find((x) => x.name.startsWith('enemy-sprite'));
+    const enemyFirstGid = enemyTilset?.firstgid!;
+    enemyLayer.objects.forEach((object: any) => {
+      const spriteIndex = object.gid - enemyFirstGid;
       const enemy: Phaser.Physics.Arcade.Sprite = this.enemyGroup.create(0, 0, 'enemy', spriteIndex);
-      enemy.setPosition(o.x + enemy.width / 2, o.y - enemy.height / 2);
-      enemy.setSize(enemy.width, fiksForPikselratio(20));
-      enemy.setOffset(0, enemy.height - fiksForPikselratio(20));
+      enemy.setPosition(object.x + enemy.width / 2, object.y - enemy.height / 2);
+      const properties: any = { ...enemyTilset?.tileProperties };
+      const objectHeight = properties[spriteIndex]?.height as number;
+      enemy.setSize(enemy.width, fiksForPikselratio(objectHeight));
+      enemy.setOffset(0, enemy.height - fiksForPikselratio(objectHeight));
       enemy.setMaxVelocity(0, 0);
       this.enemyPositions.push({ x: enemy.x, y: enemy.y, enemy });
     });

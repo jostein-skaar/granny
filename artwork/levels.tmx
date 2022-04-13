@@ -1,12 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-up" width="25" height="200" tilewidth="16" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="17">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-up" width="25" height="200" tilewidth="16" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="22">
  <tileset firstgid="1" name="tiles-sprite@1" tilewidth="32" tileheight="18" spacing="2" margin="1" tilecount="16" columns="4">
   <image source="../public/assets/tiles-sprite@1.png" width="136" height="80"/>
  </tileset>
  <tileset firstgid="17" name="enemy-sprite@1" tilewidth="40" tileheight="80" spacing="2" margin="1" tilecount="6" columns="6">
   <image source="../public/assets/enemy-sprite@1.png" width="252" height="82"/>
+  <tile id="0">
+   <properties>
+    <property name="height" type="int" value="80"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="height" type="int" value="48"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="height" type="int" value="18"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="height" type="int" value="80"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="height" type="int" value="48"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="height" type="int" value="18"/>
+   </properties>
+  </tile>
  </tileset>
- <layer id="1" name="level" width="25" height="200">
+ <layer id="1" name="level" width="25" height="200" locked="1">
   <data encoding="csv">
 8,1,0,14,0,12,0,12,0,12,0,15,0,4,0,15,0,16,0,1,0,9,0,7,0,
 5,0,11,0,14,0,1,0,10,0,6,0,4,0,6,0,8,0,12,0,13,0,1,0,3,
@@ -227,5 +257,9 @@
   <object id="14" gid="22" x="256" y="3510" width="40" height="80"/>
   <object id="15" gid="22" x="384" y="3384" width="40" height="80"/>
   <object id="16" gid="22" x="48" y="3330" width="40" height="80"/>
+  <object id="17" gid="18" x="208" y="3366" width="40" height="80"/>
+  <object id="18" gid="18" x="64" y="3258" width="40" height="80"/>
+  <object id="19" gid="21" x="320" y="3168" width="40" height="80"/>
+  <object id="21" gid="17" x="96" y="3438" width="40" height="80"/>
  </objectgroup>
 </map>
