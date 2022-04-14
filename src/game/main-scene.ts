@@ -87,12 +87,12 @@ export class MainScene extends Phaser.Scene {
       frameRate: 6,
     });
 
-    // this.matter.world.on('collisionstart', (event: any, bodyA: any, bodyB: any) => {
-    //   if (bodyA.label === 'hero' || bodyB.label === 'hero') {
-    //     this.timeSinceHeroCollidedInMs = this.time.now;
-    //     // console.log(bodyA.label, bodyB.label, this.timeSinceHeroCollidedInMs);
-    //   }
-    // });
+    this.matter.world.on('collisionstart', (_event: any, bodyA: any, bodyB: any) => {
+      if (bodyA.label === 'hero' || bodyB.label === 'hero') {
+        this.timeSinceHeroCollidedInMs = this.time.now;
+        // console.log(bodyA.label, bodyB.label, this.timeSinceHeroCollidedInMs);
+      }
+    });
 
     this.timeText = this.add.text(fiksForPikselratio(16), fiksForPikselratio(16), '', {
       fontSize: `${fiksForPikselratio(24)}px`,
@@ -139,11 +139,10 @@ export class MainScene extends Phaser.Scene {
     this.hero.play('walk', true);
 
     this.currentTimeInMs = time - this.startTimeInMs;
+    const currentSpeed = -2 + (-1 * (time - this.timeSinceHeroCollidedInMs)) / 1000;
     // console.log(this.hero.body.velocity.y);
-    if (time - this.timeSinceHeroCollidedInMs < 10) {
-    } else {
-      this.hero.setVelocity(0, fiksForPikselratio(-3));
-    }
+    console.log('currentSpeed', currentSpeed);
+    this.hero.setVelocity(0, fiksForPikselratio(currentSpeed));
     // this.hero.setVelocity(0, fiksForPikselratio(-3));
 
     this.updateText();
