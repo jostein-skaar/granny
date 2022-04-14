@@ -58,7 +58,7 @@ export class MainScene extends Phaser.Scene {
         density: fiksForPikselratioInverted(0.2),
         label: 'enemy',
       });
-      console.log('enemy', enemy.body.mass);
+      // console.log('enemy', enemy.body.mass);
       enemy.setPosition(object.x + enemy.width / 2, object.y - enemy.height / 2);
       this.enemyPositions.push({ x: enemy.x, y: enemy.y, enemy });
     });
@@ -74,7 +74,7 @@ export class MainScene extends Phaser.Scene {
     this.hero.setFixedRotation();
 
     this.hero.setDensity(fiksForPikselratioInverted(0.001));
-    console.log('hero', this.hero.body.mass);
+    // console.log('hero', this.hero.body.mass);
 
     this.hero.setInteractive({ draggable: true });
     this.hero.on('drag', (_pointer: any, dragX: number) => {
@@ -141,7 +141,7 @@ export class MainScene extends Phaser.Scene {
     this.currentTimeInMs = time - this.startTimeInMs;
     const currentSpeed = -2 + (-1 * (time - this.timeSinceHeroCollidedInMs)) / 1000;
     // console.log(this.hero.body.velocity.y);
-    console.log('currentSpeed', currentSpeed);
+    // console.log('currentSpeed', currentSpeed);
     this.hero.setVelocity(0, fiksForPikselratio(currentSpeed));
     // this.hero.setVelocity(0, fiksForPikselratio(-3));
 
