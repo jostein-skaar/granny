@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { fiksForPikselratio } from '../fiks-for-pikselratio';
+import { fiksForPikselratio, fiksForPikselratioInverted } from '../fiks-for-pikselratio';
 
 export class MainScene extends Phaser.Scene {
   gameWidth!: number;
@@ -11,7 +11,7 @@ export class MainScene extends Phaser.Scene {
   countdownText!: Phaser.GameObjects.Text;
   startTimeInMs = 0;
   currentTimeInMs = 0;
-  currentSpeed = 0;
+  timeSinceHeroCollidedInMs = 0;
   playerNumber!: number;
   timeText!: Phaser.GameObjects.Text;
   finishLineText!: Phaser.GameObjects.Text;
@@ -55,8 +55,10 @@ export class MainScene extends Phaser.Scene {
       const enemy: Phaser.Physics.Matter.Sprite = this.matter.add.sprite(0, 0, 'enemy', spriteIndex, {
         shape: { type: 'rectangle', width: objectWidth, height: objectRealHeight },
         render: { sprite: { xOffset: 0, yOffset: (1 - objectRealHeight / objectHeight) / 2 } },
-        mass: 100,
+        density: fiksForPikselratioInverted(0.2),
+        label: 'enemy',
       });
+      console.log('enemy', enemy.body.mass);
       enemy.setPosition(object.x + enemy.width / 2, object.y - enemy.height / 2);
       this.enemyPositions.push({ x: enemy.x, y: enemy.y, enemy });
     });
@@ -68,9 +70,10 @@ export class MainScene extends Phaser.Scene {
     this.finishLineText.setOrigin(0.5, 0);
 
     this.hero = this.matter.add.sprite(0, 0, 'hero');
-    this.hero.setBody({ type: 'rectangle', width: this.hero.width * 0.9, height: this.hero.height * 0.9 });
+    this.hero.setBody({ type: 'rectangle', width: this.hero.width * 0.9, height: this.hero.height * 0.9 }, { label: 'hero' });
     this.hero.setFixedRotation();
-    this.hero.setMass(1);
+
+    this.hero.setDensity(fiksForPikselratioInverted(0.001));
     console.log('hero', this.hero.body.mass);
 
     this.hero.setInteractive({ draggable: true });
@@ -83,6 +86,13 @@ export class MainScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('hero', { frames: [0, 1] }),
       frameRate: 6,
     });
+
+    // this.matter.world.on('collisionstart', (event: any, bodyA: any, bodyB: any) => {
+    //   if (bodyA.label === 'hero' || bodyB.label === 'hero') {
+    //     this.timeSinceHeroCollidedInMs = this.time.now;
+    //     // console.log(bodyA.label, bodyB.label, this.timeSinceHeroCollidedInMs);
+    //   }
+    // });
 
     this.timeText = this.add.text(fiksForPikselratio(16), fiksForPikselratio(16), '', {
       fontSize: `${fiksForPikselratio(24)}px`,
@@ -129,9 +139,12 @@ export class MainScene extends Phaser.Scene {
     this.hero.play('walk', true);
 
     this.currentTimeInMs = time - this.startTimeInMs;
-    this.currentSpeed = -3; //+ (-10 * this.currentTimeInMs) / 1000;
     // console.log(this.hero.body.velocity.y);
-    this.hero.setVelocityY(fiksForPikselratio(this.currentSpeed));
+    if (time - this.timeSinceHeroCollidedInMs < 10) {
+    } else {
+      this.hero.setVelocity(0, fiksForPikselratio(-3));
+    }
+    // this.hero.setVelocity(0, fiksForPikselratio(-3));
 
     this.updateText();
 
@@ -149,7 +162,6 @@ export class MainScene extends Phaser.Scene {
 
     this.isFinished = false;
     this.isPaused = true;
-    this.currentSpeed = 0;
 
     let countdownCounter = 0;
     if (countdownCounter > 0) {
@@ -173,7 +185,6 @@ export class MainScene extends Phaser.Scene {
 
   private startGame() {
     this.isPaused = false;
-    this.currentSpeed = -100;
     this.startTimeInMs = this.time.now;
     this.currentTimeInMs = 0;
     this.updateText();
@@ -207,6 +218,8 @@ export class MainScene extends Phaser.Scene {
     for (const positionInfo of this.enemyPositions) {
       const enemy: Phaser.Physics.Matter.Sprite = positionInfo.enemy;
       enemy.setPosition(positionInfo.x, positionInfo.y);
+      enemy.setAngularVelocity(0);
+      enemy.setVelocity(0, 0);
       enemy.setAngle(0);
     }
   }
