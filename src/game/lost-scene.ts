@@ -35,18 +35,6 @@ export class LostScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0.5);
 
-    // If no gampad, click to be ready.
-    setTimeout(() => {
-      this.input.once('pointerdown', () => {
-        if (this.twoPlayers) {
-          this.hasBeenLeft = true;
-          this.hasBeenRight = true;
-        } else {
-          this.startAgain();
-        }
-      });
-    }, 500);
-
     this.events.on('resume', (_: any, data: any) => {
       console.log('lost-scene: resume');
 
@@ -58,15 +46,21 @@ export class LostScene extends Phaser.Scene {
       this.timeInMs = data.timeInMs;
       this.updateText();
 
-      // setTimeout(() => {
-      //   this.startAgain()
-      // }, 2000);
+      // If no gampad, click to be ready.
+      setTimeout(() => {
+        this.input.once('pointerdown', () => {
+          if (this.twoPlayers) {
+            this.hasBeenLeft = true;
+            this.hasBeenRight = true;
+          } else {
+            this.startAgain();
+          }
+        });
+      }, 500);
     });
   }
 
   update() {
-    console.log('venter');
-
     if (this.input.gamepad.total > 0) {
       const axisIndex = this.playerNumber === 1 ? 0 : 1;
       const value = this.input.gamepad.pad1.axes[axisIndex].value;
