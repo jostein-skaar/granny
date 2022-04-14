@@ -13,6 +13,7 @@ export class MainScene extends Phaser.Scene {
   currentTimeInMs = 0;
   timeSinceHeroCollidedInMs = 0;
   playerNumber!: number;
+  twoPlayers!: boolean;
   timeText!: Phaser.GameObjects.Text;
   finishLineText!: Phaser.GameObjects.Text;
   enemyPositions: any[] = [];
@@ -162,7 +163,14 @@ export class MainScene extends Phaser.Scene {
     this.isFinished = false;
     this.isPaused = true;
 
-    let countdownCounter = 0;
+    if (this.twoPlayers) {
+      if (!globalThis.player1Ready || !globalThis.player2Ready) {
+        this.finish();
+        return;
+      }
+    }
+
+    let countdownCounter = 3;
     if (countdownCounter > 0) {
       this.countdownText.setVisible(true);
       this.countdownText.setText(countdownCounter.toString());
@@ -197,7 +205,6 @@ export class MainScene extends Phaser.Scene {
     this.isFinished = true;
     this.timeText.setVisible(false);
     this.scene.pause();
-    // this.scene.launch('lost-scene', { timeInMs: this.currentTimeInMs });
     this.scene.bringToTop('lost-scene');
     this.scene.resume('lost-scene', { timeInMs: this.currentTimeInMs });
   }

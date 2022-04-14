@@ -5,6 +5,19 @@ import Phaser from 'phaser';
 import { createGameConfig } from './game/config';
 import { MainScene } from './game/main-scene';
 
+const urlParams = new URLSearchParams(window.location.search);
+const twoPlayers = urlParams.get('spillere') === '2' ? true : false;
+
+if (twoPlayers) {
+  const playerInfo = document.querySelector<HTMLDivElement>('.player-info')!;
+  for (let index = 0; index < 2; index++) {
+    const playerDiv = document.createElement('div');
+    playerDiv.className = 'player-number';
+    playerDiv.innerText = `Spiller ${index + 1}`;
+    playerInfo.appendChild(playerDiv);
+  }
+}
+
 let isDebug = true;
 
 if (import.meta.env.PROD) {
@@ -19,8 +32,12 @@ if (pixelRatio !== 1 && pixelRatio !== 2 && pixelRatio !== 3) {
 
 declare global {
   var pixelRatio: number;
+  var player1Ready: boolean;
+  var player2Ready: boolean;
 }
 globalThis.pixelRatio = pixelRatio;
+globalThis.player1Ready = false;
+globalThis.player2Ready = false;
 
 const gameConfig = createGameConfig(400, 600, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
 new Phaser.Game({
@@ -28,18 +45,25 @@ new Phaser.Game({
   callbacks: {
     postBoot: (game) => {
       (game.scene.getScene('main-scene') as MainScene).playerNumber = 1;
+      (game.scene.getScene('main-scene') as MainScene).twoPlayers = twoPlayers;
+      (game.scene.getScene('lost-scene') as MainScene).playerNumber = 1;
+      (game.scene.getScene('lost-scene') as MainScene).twoPlayers = twoPlayers;
     },
   },
 });
-new Phaser.Game({
-  ...gameConfig,
-  callbacks: {
-    postBoot: (game) => {
-      (game.scene.getScene('main-scene') as MainScene).playerNumber = 2;
+if (twoPlayers) {
+  new Phaser.Game({
+    ...gameConfig,
+    callbacks: {
+      postBoot: (game) => {
+        (game.scene.getScene('main-scene') as MainScene).playerNumber = 2;
+        (game.scene.getScene('main-scene') as MainScene).twoPlayers = twoPlayers;
+        (game.scene.getScene('lost-scene') as MainScene).playerNumber = 2;
+        (game.scene.getScene('lost-scene') as MainScene).twoPlayers = twoPlayers;
+      },
     },
-  },
-});
-
+  });
+}
 window.onload = () => {
   const loader = document.querySelector<HTMLDivElement>('#loader')!;
   const content = document.querySelector<HTMLDivElement>('#content')!;
