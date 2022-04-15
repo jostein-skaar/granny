@@ -11,14 +11,3 @@ export default defineConfig({
     }),
   ],
 });
-
-// export default {
-//   plugins: [
-//     VitePWA({
-//       registerType: 'autoUpdate',
-//       workbox: {
-//         globPatterns: ['**/*.{js,css,html,png,json,svg,webmanifest}'],
-//       },
-//     }),
-//   ],
-// };
