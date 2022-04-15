@@ -160,6 +160,7 @@ export class MainScene extends Phaser.Scene {
 
     this.resetEnemyPositions();
 
+    this.timeSinceHeroCollidedInMs = 0;
     this.isFinished = false;
     this.isPaused = true;
 
