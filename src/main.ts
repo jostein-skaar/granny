@@ -115,6 +115,7 @@ registerSW({
   onRegistered(r) {
     r &&
       setInterval(() => {
+        console.log('Før update');
         r.update();
       }, 1 * 60 * 1000);
   },
