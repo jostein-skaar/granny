@@ -1,6 +1,7 @@
+import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default {
+export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
@@ -9,4 +10,15 @@ export default {
       },
     }),
   ],
-};
+});
+
+// export default {
+//   plugins: [
+//     VitePWA({
+//       registerType: 'autoUpdate',
+//       workbox: {
+//         globPatterns: ['**/*.{js,css,html,png,json,svg,webmanifest}'],
+//       },
+//     }),
+//   ],
+// };
