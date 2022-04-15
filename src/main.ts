@@ -83,7 +83,6 @@ if (twoPlayers) {
 window.onload = () => {
   const loader = document.querySelector<HTMLDivElement>('#loader')!;
   const content = document.querySelector<HTMLDivElement>('#content')!;
-
   loader.style.display = 'none';
   content.style.display = 'block';
 };
