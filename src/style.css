@@ -42,11 +42,16 @@ p {
 
 #results {
   width: 250px;
+  display: none;
 }
 
 #results h2 {
   margin-top: 0;
   margin-bottom: 10px;
+}
+
+#gamePlayer2 {
+  display: none;
 }
 
 #gamePlayer2 canvas {

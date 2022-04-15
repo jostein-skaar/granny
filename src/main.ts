@@ -23,6 +23,10 @@ let currentResultPlayer1: Result;
 let currentResultPlayer2: Result;
 if (twoPlayers) {
   printResults();
+  const results = document.querySelector<HTMLDivElement>('#results')!;
+  const gamePlayer2 = document.querySelector<HTMLDivElement>('#gamePlayer2')!;
+  results.style.display = 'block';
+  gamePlayer2.style.display = 'block';
 }
 
 let isDebug = true;
