@@ -112,6 +112,9 @@ function printResults(resultPlayer1?: Result, resultPlayer2?: Result) {
 }
 
 registerSW({
+  onOfflineReady() {
+    console.log('onOfflineReady');
+  },
   onRegistered(r) {
     r &&
       setInterval(() => {
