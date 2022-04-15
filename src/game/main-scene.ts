@@ -71,7 +71,7 @@ export class MainScene extends Phaser.Scene {
     this.finishLineText.setOrigin(0.5, 0);
 
     this.hero = this.matter.add.sprite(0, 0, 'hero');
-    this.hero.setBody({ type: 'rectangle', width: this.hero.width * 0.9, height: this.hero.height * 0.9 }, { label: 'hero' });
+    this.hero.setBody({ type: 'rectangle', width: this.hero.width * 0.8, height: this.hero.height * 0.8 }, { label: 'hero' });
     this.hero.setFixedRotation();
 
     this.hero.setDensity(fiksForPikselratioInverted(0.001));
