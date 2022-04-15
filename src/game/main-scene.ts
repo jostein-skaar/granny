@@ -160,7 +160,6 @@ export class MainScene extends Phaser.Scene {
 
     this.resetEnemyPositions();
 
-    this.timeSinceHeroCollidedInMs = 0;
     this.isFinished = false;
     this.isPaused = true;
 
@@ -195,6 +194,7 @@ export class MainScene extends Phaser.Scene {
     this.isPaused = false;
     this.startTimeInMs = this.time.now;
     this.currentTimeInMs = 0;
+    this.timeSinceHeroCollidedInMs = 0;
     this.updateText();
     this.timeText.setVisible(true);
   }
