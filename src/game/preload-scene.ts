@@ -9,23 +9,23 @@ export class PreloadScene extends Phaser.Scene {
   preload() {
     // console.log('preload-scene');
 
-    this.load.spritesheet('hero', `/assets/hero-sprite@${fiksForPikselratio(1)}.png?v={VERSJON}`, {
+    this.load.spritesheet('hero', `/assets/hero-sprite@${fiksForPikselratio(1)}.png`, {
       frameWidth: fiksForPikselratio(75),
       frameHeight: fiksForPikselratio(90),
       margin: 1,
       spacing: 2,
     });
 
-    this.load.spritesheet('enemy', `/assets/enemy-sprite@${fiksForPikselratio(1)}.png?v={VERSJON}`, {
+    this.load.spritesheet('enemy', `/assets/enemy-sprite@${fiksForPikselratio(1)}.png`, {
       frameWidth: fiksForPikselratio(40),
       frameHeight: fiksForPikselratio(80),
       margin: 1,
       spacing: 2,
     });
 
-    this.load.image('tiles', `/assets/tiles-sprite@${fiksForPikselratio(1)}.png?v={VERSJON}`);
+    this.load.image('tiles', `/assets/tiles-sprite@${fiksForPikselratio(1)}.png`);
 
-    this.load.tilemapTiledJSON('map', `assets/levels@${fiksForPikselratio(1)}.json?v={VERSJON}`);
+    this.load.tilemapTiledJSON('map', `assets/levels@${fiksForPikselratio(1)}.json`);
   }
 
   create(): void {
