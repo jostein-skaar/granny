@@ -7,7 +7,7 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload() {
-    console.log('preload-scene');
+    // console.log('preload-scene');
 
     this.load.spritesheet('hero', `/assets/hero-sprite@${fiksForPikselratio(1)}.png?v={VERSJON}`, {
       frameWidth: fiksForPikselratio(75),

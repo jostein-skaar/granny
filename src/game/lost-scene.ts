@@ -17,13 +17,13 @@ export class LostScene extends Phaser.Scene {
   }
 
   init() {
-    console.log('lost-scene: init');
+    // console.log('lost-scene: init');
     this.bredde = this.game.scale.gameSize.width;
     this.hoyde = this.game.scale.gameSize.height;
   }
 
   create() {
-    console.log('lost-scene: create');
+    // console.log('lost-scene: create');
 
     this.scoreText = this.add
       .text(this.bredde / 2, this.hoyde / 2, '', {
@@ -37,7 +37,7 @@ export class LostScene extends Phaser.Scene {
       .setOrigin(0.5, 0.5);
 
     this.events.on('resume', (_: any, data: any) => {
-      console.log('lost-scene: resume');
+      // console.log('lost-scene: resume');
 
       this.playerIsReady = false;
       this.hasBeenLeft = false;

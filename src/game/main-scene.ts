@@ -29,14 +29,14 @@ export class MainScene extends Phaser.Scene {
     this.gameWidth = this.game.scale.gameSize.width;
     this.gameHeight = this.game.scale.gameSize.height;
 
-    console.log('main-scene: init');
+    // console.log('main-scene: init');
   }
 
   create(): void {
-    console.log('main-scene: create');
+    // console.log('main-scene: create');
 
     this.events.on('resume', () => {
-      console.log('main-scene: resume');
+      // console.log('main-scene: resume');
       this.prepareNewGame();
     });
 
