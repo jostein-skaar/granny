@@ -52,7 +52,7 @@ globalThis.pixelRatio = pixelRatio;
 globalThis.player1Ready = false;
 globalThis.player2Ready = false;
 
-const gameConfig1 = createGameConfig('gamePlayer1', 400, 600, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
+const gameConfig1 = createGameConfig('gamePlayer1', 400, 700, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
 new Phaser.Game({
   ...gameConfig1,
   callbacks: {
@@ -66,7 +66,7 @@ new Phaser.Game({
   },
 });
 if (twoPlayers) {
-  const gameConfig2 = createGameConfig('gamePlayer2', 400, 600, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
+  const gameConfig2 = createGameConfig('gamePlayer2', 400, 700, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
   new Phaser.Game({
     ...gameConfig2,
     callbacks: {
