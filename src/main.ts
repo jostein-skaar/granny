@@ -113,7 +113,7 @@ function printResults(resultPlayer1?: Result, resultPlayer2?: Result) {
 
 registerSW({
   onOfflineReady() {
-    console.log('onOfflineReady');
+    console.log('onOfflineReady2');
   },
   onRegistered(r) {
     r &&
