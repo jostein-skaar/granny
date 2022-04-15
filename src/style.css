@@ -29,21 +29,54 @@ p {
   overflow-y: auto;
 }
 
-#game canvas {
+.game-container {
+  display: flex;
+  justify-content: center;
+}
+
+#gamePlayer1 canvas {
   border: 15px;
   border-style: solid;
-}
-
-#game canvas:last-of-type {
-  border-color: rgb(23, 207, 100);
-  margin-left: 100px;
-}
-
-#game canvas:first-of-type {
   border-color: rgb(67, 164, 255);
-  margin-left: 0;
 }
 
+#results {
+  width: 250px;
+}
+
+#results h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+#gamePlayer2 canvas {
+  border: 15px;
+  border-style: solid;
+  border-color: rgb(23, 207, 100);
+}
+
+#results ol {
+  margin: 0;
+  padding: 0;
+  margin-left: 100px;
+
+  text-indent: 0;
+  font-size: 1.4rem;
+  width: 100px;
+  line-height: 1.1;
+}
+
+#results ol li {
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+}
+
+#results ol li.current-player {
+  font-weight: 800;
+}
+
+/* 
 .player-info {
   display: flex;
   justify-content: center;
@@ -54,4 +87,4 @@ p {
 .player-number {
   font-size: 1.8rem;
   width: 430px;
-}
+} */

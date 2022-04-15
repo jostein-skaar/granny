@@ -3,6 +3,7 @@ import { MainScene } from './main-scene';
 import { PreloadScene } from './preload-scene';
 
 export function createGameConfig(
+  parent: string,
   width: number,
   height: number,
   scalingModePhaser: Phaser.Scale.ScaleModes,
@@ -18,7 +19,7 @@ export function createGameConfig(
     height: height * pixelRatio,
     backgroundColor: 0xb3b3b3,
     autoFocus: true,
-    parent: 'game',
+    parent: parent,
 
     render: {
       antialias: true, // Using this to prevent flickering presents when moving (at least on iPhone with pixelRatio 3).

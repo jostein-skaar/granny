@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { fiksForPikselratio, fiksForPikselratioInverted } from '../fiks-for-pikselratio';
+import { Result } from './result.model';
+import { saveResults } from './results';
 
 export class MainScene extends Phaser.Scene {
   gameWidth!: number;
@@ -17,6 +19,7 @@ export class MainScene extends Phaser.Scene {
   timeText!: Phaser.GameObjects.Text;
   finishLineText!: Phaser.GameObjects.Text;
   enemyPositions: any[] = [];
+  finishCallback: any;
 
   constructor() {
     super('main-scene');
@@ -177,7 +180,6 @@ export class MainScene extends Phaser.Scene {
       const countdownIntervalId = setInterval(() => {
         countdownCounter--;
         this.countdownText.setText(countdownCounter.toString());
-        // console.log(countdownCounter);
         if (countdownCounter <= 0) {
           this.countdownText.setVisible(false);
           this.startGame();
@@ -208,6 +210,15 @@ export class MainScene extends Phaser.Scene {
     this.scene.pause();
     this.scene.bringToTop('lost-scene');
     this.scene.resume('lost-scene', { timeInMs: this.currentTimeInMs });
+
+    const result: Result = { info: `Spiller ${this.playerNumber}`, timeInMs: this.currentTimeInMs };
+    // console.log('result', result);
+    saveResults(result);
+    if (this.playerNumber === 1) {
+      this.finishCallback(result, undefined);
+    } else if (this.playerNumber === 2) {
+      this.finishCallback(undefined, result);
+    }
   }
 
   private updateText() {

@@ -1,4 +1,5 @@
 import { fiksForPikselratio } from '../fiks-for-pikselratio';
+import { timeInMsAsString } from './results';
 
 export class LostScene extends Phaser.Scene {
   bredde!: number;
@@ -90,18 +91,24 @@ export class LostScene extends Phaser.Scene {
   private updateText() {
     if (this.twoPlayers) {
       if (this.playerIsReady) {
-        this.scoreText.setText(`Venter på at motspiller\nskal bli klar`);
-      } else {
         if (this.timeInMs === 0) {
-          this.scoreText.setText(`Er du klar?\n(Trykk eller flytt fram og tilbake\nfor å prøve igjen)`);
+          this.scoreText.setText(`Venter på at motstander\nogså skal bli klar`);
         } else {
           this.scoreText.setText(
-            `Du klarte det på ${(this.timeInMs / 1000).toFixed(2)} sekunder\n(Trykk eller flytt fram og tilbake\nfor å prøve igjen)`
+            `Du klarte det på ${timeInMsAsString(this.timeInMs)} sekunder\n\nVenter på at motstander\nogså skal bli klar`
+          );
+        }
+      } else {
+        if (this.timeInMs === 0) {
+          this.scoreText.setText(`Er du klar?\n\nFlytt spaken fram og tilbake\nnår du er klar`);
+        } else {
+          this.scoreText.setText(
+            `Du klarte det på ${timeInMsAsString(this.timeInMs)} sekunder\n\nFlytt spaken fram og tilbake\nnår du er klar`
           );
         }
       }
     } else {
-      this.scoreText.setText(`Du klarte det på ${(this.timeInMs / 1000).toFixed(2)} sekunder\n(Trykk for å prøve igjen)`);
+      this.scoreText.setText(`Du klarte det på ${timeInMsAsString(this.timeInMs)} sekunder\n\nTrykk for å prøve igjen`);
     }
   }
 
