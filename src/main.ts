@@ -1,5 +1,7 @@
 import './style.css';
 
+import { registerSW } from 'virtual:pwa-register';
+
 import Phaser from 'phaser';
 
 import { createGameConfig } from './game/config';
@@ -109,3 +111,5 @@ function printResults(resultPlayer1?: Result, resultPlayer2?: Result) {
     resultContainer.appendChild(resultLi);
   }
 }
+
+registerSW();
