@@ -88,11 +88,11 @@ export class MainScene extends Phaser.Scene {
       frameRate: 6,
     });
 
-    this.matter.world.on('collisionstart', (_event: any, bodyA: any, bodyB: any) => {
-      if (bodyA.label === 'hero' || bodyB.label === 'hero') {
-        this.timeSinceHeroCollidedInMs = this.time.now;
-        // console.log(bodyA.label, bodyB.label, this.timeSinceHeroCollidedInMs);
-      }
+    this.matter.world.on('collisionstart', (_event: any, _bodyA: any, _bodyB: any) => {
+      // if (bodyA.label === 'hero' || bodyB.label === 'hero') {
+      this.timeSinceHeroCollidedInMs = this.time.now;
+      // console.log(bodyA.label, bodyB.label, this.timeSinceHeroCollidedInMs);
+      // }
     });
 
     this.timeText = this.add.text(fiksForPikselratio(16), fiksForPikselratio(16), '', {
