@@ -116,7 +116,9 @@ registerSW({
     r &&
       setInterval(() => {
         console.log('Før sw update');
-        r.update();
+        r.update().then(() => {
+          console.log('update.then()');
+        });
       }, 1 * 60 * 1000);
   },
 });
