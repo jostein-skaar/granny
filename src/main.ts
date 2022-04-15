@@ -112,4 +112,11 @@ function printResults(resultPlayer1?: Result, resultPlayer2?: Result) {
   }
 }
 
-registerSW();
+registerSW({
+  onRegistered(r) {
+    r &&
+      setInterval(() => {
+        r.update();
+      }, 1 * 60 * 1000);
+  },
+});
