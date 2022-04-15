@@ -194,7 +194,7 @@ export class MainScene extends Phaser.Scene {
     this.isPaused = false;
     this.startTimeInMs = this.time.now;
     this.currentTimeInMs = 0;
-    this.timeSinceHeroCollidedInMs = 0;
+    this.timeSinceHeroCollidedInMs = this.time.now;
     this.updateText();
     this.timeText.setVisible(true);
   }
