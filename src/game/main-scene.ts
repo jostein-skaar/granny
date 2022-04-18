@@ -57,6 +57,7 @@ export class MainScene extends Phaser.Scene {
       const objectRealHeight = fiksForPikselratio(enemyTilsetProperties[spriteIndex]?.height as number);
 
       const enemy: Phaser.Physics.Matter.Sprite = this.matter.add.sprite(0, 0, 'enemy', spriteIndex, {
+        // @ts-ignore
         shape: { type: 'rectangle', width: objectWidth, height: objectRealHeight },
         render: { sprite: { xOffset: 0, yOffset: (1 - objectRealHeight / objectHeight) / 2 } },
         density: fiksForPikselratioInverted(0.2),
