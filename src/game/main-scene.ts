@@ -14,8 +14,8 @@ export class MainScene extends Phaser.Scene {
   startTimeInMs = 0;
   currentTimeInMs = 0;
   timeSinceHeroCollidedInMs = 0;
-  playerNumber!: number;
-  twoPlayers!: boolean;
+  playerNumber: number = 1;
+  twoPlayers: boolean = false;
   timeText!: Phaser.GameObjects.Text;
   finishLineText!: Phaser.GameObjects.Text;
   enemyPositions: any[] = [];
@@ -214,10 +214,12 @@ export class MainScene extends Phaser.Scene {
     const result: Result = { info: `Spiller ${this.playerNumber}`, timeInMs: this.currentTimeInMs };
     // console.log('result', result);
     saveResults(result);
-    if (this.playerNumber === 1) {
-      this.finishCallback(result, undefined);
-    } else if (this.playerNumber === 2) {
-      this.finishCallback(undefined, result);
+    if (this.finishCallback) {
+      if (this.playerNumber === 1) {
+        this.finishCallback(result, undefined);
+      } else if (this.playerNumber === 2) {
+        this.finishCallback(undefined, result);
+      }
     }
   }
 

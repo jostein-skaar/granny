@@ -15,6 +15,6 @@
   },
   "dependencies": {
     "@jostein-skaar/common-game": "^1.1.1",
-    "phaser": "^3.60.0-beta.3"
+    "phaser": "^3.55.2"
   }
 }

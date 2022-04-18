@@ -5,7 +5,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   overflow: hidden;
   height: 100%;
-  /* background-color: rgb(250, 250, 250); */
   background-color: #d6ffd9;
   color: rgb(61, 61, 61);
 }
@@ -29,8 +28,8 @@ p {
   overflow-y: auto;
 }
 
-.game-container {
-  display: flex;
+.two-player-game-container {
+  display: none;
   justify-content: center;
 }
 
@@ -42,16 +41,11 @@ p {
 
 #results {
   width: 250px;
-  display: none;
 }
 
 #results h2 {
   margin-top: 0;
   margin-bottom: 14px;
-}
-
-#gamePlayer2 {
-  display: none;
 }
 
 #gamePlayer2 canvas {
@@ -68,7 +62,6 @@ p {
   text-indent: 0;
   font-size: 1.45rem;
   width: 100px;
-  /* line-height: 1.1; */
 }
 
 #results ol li {
@@ -81,15 +74,12 @@ p {
   font-weight: 800;
 }
 
-/* 
-.player-info {
-  display: flex;
-  justify-content: center;
-  gap: 100px;
-  margin-top: 10px;
-}
+@media (max-height: 1023px) {
+  #content {
+    padding: 0px;
+  }
 
-.player-number {
-  font-size: 1.8rem;
-  width: 430px;
-} */
+  .game-info {
+    display: none;
+  }
+}

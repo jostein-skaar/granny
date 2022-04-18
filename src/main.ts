@@ -12,23 +12,14 @@ import { Result } from './game/result.model';
 const urlParams = new URLSearchParams(window.location.search);
 const twoPlayers = urlParams.get('spillere') === '2' ? true : false;
 
-// if (twoPlayers) {
-//   const playerInfo = document.querySelector<HTMLDivElement>('.player-info')!;
-//   for (let index = 0; index < 2; index++) {
-//     const playerDiv = document.createElement('div');
-//     playerDiv.className = 'player-number';
-//     playerDiv.innerText = `Spiller ${index + 1}`;
-//     playerInfo.appendChild(playerDiv);
-//   }
-// }
 let currentResultPlayer1: Result;
 let currentResultPlayer2: Result;
 if (twoPlayers) {
   printResults();
-  const results = document.querySelector<HTMLDivElement>('#results')!;
-  const gamePlayer2 = document.querySelector<HTMLDivElement>('#gamePlayer2')!;
-  results.style.display = 'block';
-  gamePlayer2.style.display = 'block';
+  const gameSinglePlayer = document.querySelector<HTMLDivElement>('#gameSinglePlayer')!;
+  gameSinglePlayer.style.display = 'none';
+  const twoPlayerGameContainer = document.querySelector<HTMLDivElement>('.two-player-game-container')!;
+  twoPlayerGameContainer.style.display = 'flex';
 }
 
 let isDebug = true;
@@ -52,20 +43,20 @@ globalThis.pixelRatio = pixelRatio;
 globalThis.player1Ready = false;
 globalThis.player2Ready = false;
 
-const gameConfig1 = createGameConfig('gamePlayer1', 400, 700, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
-new Phaser.Game({
-  ...gameConfig1,
-  callbacks: {
-    postBoot: (game) => {
-      (game.scene.getScene('main-scene') as MainScene).playerNumber = 1;
-      (game.scene.getScene('main-scene') as MainScene).twoPlayers = twoPlayers;
-      (game.scene.getScene('main-scene') as MainScene).finishCallback = printResults;
-      (game.scene.getScene('lost-scene') as MainScene).playerNumber = 1;
-      (game.scene.getScene('lost-scene') as MainScene).twoPlayers = twoPlayers;
-    },
-  },
-});
 if (twoPlayers) {
+  const gameConfig1 = createGameConfig('gamePlayer1', 400, 700, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
+  new Phaser.Game({
+    ...gameConfig1,
+    callbacks: {
+      postBoot: (game) => {
+        (game.scene.getScene('main-scene') as MainScene).playerNumber = 1;
+        (game.scene.getScene('main-scene') as MainScene).twoPlayers = twoPlayers;
+        (game.scene.getScene('main-scene') as MainScene).finishCallback = printResults;
+        (game.scene.getScene('lost-scene') as MainScene).playerNumber = 1;
+        (game.scene.getScene('lost-scene') as MainScene).twoPlayers = twoPlayers;
+      },
+    },
+  });
   const gameConfig2 = createGameConfig('gamePlayer2', 400, 700, Phaser.Scale.ScaleModes.NONE, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
   new Phaser.Game({
     ...gameConfig2,
@@ -79,7 +70,28 @@ if (twoPlayers) {
       },
     },
   });
+} else {
+  const width = 400;
+  const maxWantedHeight = 800;
+  let height = maxWantedHeight;
+
+  let scaleModePhaser = Phaser.Scale.ScaleModes.NONE;
+  if (window.innerWidth < width) {
+    scaleModePhaser = Phaser.Scale.ScaleModes.FIT;
+    const scaleRatio = window.innerWidth / width;
+    // console.log('scaleRatio', scaleRatio);
+    // Compensate scale ratio to be able to fill height of screen when FIT is used.
+    height = Math.min(window.innerHeight / scaleRatio, maxWantedHeight);
+  } else {
+    height = Math.min(window.innerHeight, maxWantedHeight);
+  }
+
+  // console.log(width, height, scaleModePhaser);
+
+  const gameConfig = createGameConfig('gameSinglePlayer', width, height, scaleModePhaser, Phaser.Scale.NO_CENTER, pixelRatio, isDebug);
+  new Phaser.Game(gameConfig);
 }
+
 window.onload = () => {
   const loader = document.querySelector<HTMLDivElement>('#loader')!;
   const content = document.querySelector<HTMLDivElement>('#content')!;
